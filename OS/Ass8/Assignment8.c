@@ -1,0 +1,387 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<math.h>
+
+int choice,track,no_req,head,head1,distance;
+int disc_req[100],finish[100];
+
+void menu()
+{
+    printf("\n\n********MENU********");
+    printf("\n 1. Input data\n 2. SSTF \n 3. SCAN \n 4. C-LOOK \n 5. Exit");
+    printf("\n\n Enter your choice \n");
+    scanf("%d",&choice);
+}
+void input()
+{
+    int i;
+    printf("Enter Total number of tracks");
+    scanf("%d",&track);
+    printf("Enter total number of disc requests");
+    scanf("%d",&no_req);
+    printf("\n Enter disc requests in FCFS order");
+    for(i=0;i<no_req;i++)
+    {
+        scanf("%d",&disc_req[i]);
+        
+    }
+    printf("\n Enter current head position");
+    scanf("%d",&head1);
+
+}
+
+
+void sstf()
+{
+    int min,diff;
+    int pending=no_req;
+    int i,distance=0,index;
+    head=head1;
+  
+    for(i=0;i<no_req;i++)
+    {
+        finish[i]=0;
+    }
+    printf("\n%d=>",head);
+    while(pending>0)
+    {   min=9999;
+        for(i=0;i<no_req;i++)
+        {
+            diff=abs(head-disc_req[i]);
+            if(finish[i]==0 && diff<min)
+            {
+                min=diff;
+                index=i;
+            }
+        }
+        finish[index]=1;
+        distance+=abs(head-disc_req[index]);
+        head=disc_req[index];
+        pending--;
+        printf("%d=>",head);
+    }
+    printf("End");
+    printf("\n\n Total Distance Traversed=%d",distance);
+printf("\n Average Distance = %f", (float)distance/no_req);
+}
+
+
+void sort()
+{
+    int i,j,temp;
+    for(i=0;i<no_req;i++)
+    {
+        for(j=0;j<no_req;j++)
+        {
+            if(disc_req[i]<disc_req[j])
+            {
+                temp=disc_req[i];
+                disc_req[i]=disc_req[j];
+                disc_req[j]=temp;
+            }
+        }
+    }
+}
+void scan()
+{
+    int index,dir;
+    int i;
+    distance=0;
+    head=head1;
+    printf("Enter the maximum Value");
+    int max;
+	scanf("%d",&max);
+    printf("\n Enter the direction of head \n 1 - Towars higher disc(Right) \n 0 -towards lower disc(left)");
+    scanf("%d",&dir);
+    sort();
+    printf("\n Sorted Disc requests are: ");
+    for(i=0;i<no_req;i++)
+    {
+        
+        printf("  %d",disc_req[i]);
+    }
+    
+    i=0;
+    while(head>=disc_req[i])
+    {
+        index=i;
+        i++;
+    }
+    printf("\n index=%d",index);
+    printf("\n%d=>",head);
+    if(dir==1)
+    {
+        sort();
+        for(i=index+1;i<no_req;i++)
+        {
+            printf("%d=>",disc_req[i]);
+            distance+=abs(head-disc_req[i]);
+            head=disc_req[i];          
+        }
+        distance+=abs(head-(track-1));
+        printf("%d=>",track-1);
+        head=track-1;
+        for(i=index;i>=0;i--)
+        {
+            printf("%d=>",disc_req[i]);
+            distance+=abs(head-disc_req[i]);
+            head=disc_req[i];          
+        }
+    }
+    else
+    {
+        sort();
+        for(i=index;i>=0;i--)
+        {
+            printf("%d=>",disc_req[i]);
+            distance+=abs(head-disc_req[i]);
+            head=disc_req[i];          
+        }
+        distance+=abs(head-0);
+        head=0;
+        printf("0=>");
+        for(i=index+1;i<no_req;i++)
+        {
+            printf("%d=>",disc_req[i]);
+            distance+=abs(head-disc_req[i]);
+            head=disc_req[i];          
+        }
+        
+    }
+    printf("End");
+    printf("\n Total Distance Traversed=%d",distance);
+printf("\n Average Distance = %f", (float)distance/no_req);
+
+}
+
+
+void clook()
+{
+    int index,dir;
+    int i;
+    distance=0;
+    head=head1;
+    printf("\n Enter the direction of head \n 1 - Towars higher disc \n 0 -towards lower disc");
+    scanf("%d",&dir);
+    sort();
+    printf("\n Sorted Disc requests are: ");
+    for(i=0;i<no_req;i++)
+    {
+        
+        printf("  %d",disc_req[i]);
+    }
+    
+    i=0;
+    while(head>=disc_req[i])
+    {
+        index=i;
+        i++;
+    }
+    printf("\n index=%d",index);
+    printf("\n%d=>",head);
+    if(dir==1)
+    {
+        sort();
+        for(i=index+1;i<no_req;i++)
+        {
+            printf("%d=>",disc_req[i]);
+            distance+=abs(head-disc_req[i]);
+            head=disc_req[i];          
+        }
+        for(i=0;i<index;i++)
+        {
+            printf("%d=>",disc_req[i]);
+            distance+=abs(head-disc_req[i]);
+            head=disc_req[i];          
+        }
+    }
+    else
+    {
+        sort();
+        for(i=index;i>=0;i--)
+        {
+            printf("%d=>",disc_req[i]);
+            distance+=abs(head-disc_req[i]);
+            head=disc_req[i];          
+        }
+        for(i=(no_req-1);i>index;i--)
+        {
+            printf("%d=>",disc_req[i]);
+            distance+=abs(head-disc_req[i]);
+            head=disc_req[i];          
+        }
+        
+    }
+    printf("End");
+    printf("\n Total Distance Traversed=%d",distance);
+	printf("\n Average Distance = %f", (float)distance/no_req);
+}
+
+int main()
+{
+    while(1)
+    {
+        menu();
+        switch(choice)
+        {
+        case 1: input();
+            break;
+        case 2: sstf();
+            break;
+        case 3: scan();
+            break;
+        case 4: clook();
+            break;
+        case 5: exit(0);       
+            break;
+        default:
+            printf("\n Enter valid choice");
+            break;
+        }
+    }
+
+    return 0;
+}
+
+
+/*
+       Output : 
+
+student@student-HP-Pro-3330-MT:~/TEIT-57/Ass8$ ./Ass8
+
+
+********MENU********
+ 1. Input data
+ 2. SSTF 
+ 3. SCAN 
+ 4. C-LOOK 
+ 5. Exit
+
+ Enter your choice 
+1
+Enter Total number of tracks200
+Enter total number of disc requests9
+
+ Enter disc requests in FCFS order27
+129
+110
+186
+147
+41
+10
+64
+120
+
+ Enter current head position100
+
+
+********MENU********
+ 1. Input data
+ 2. SSTF 
+ 3. SCAN 
+ 4. C-LOOK 
+ 5. Exit
+
+ Enter your choice 
+2
+
+100=>110=>120=>129=>147=>186=>64=>41=>27=>10=>End
+
+ Total Distance Traversed=262
+ Average Distance = 29.111111
+
+********MENU********
+ 1. Input data
+ 2. SSTF 
+ 3. SCAN 
+ 4. C-LOOK 
+ 5. Exit
+
+ Enter your choice 
+3
+Enter the maximum Value199
+
+ Enter the direction of head 
+ 1 - Towars higher disc(Right) 
+ 0 -towards lower disc(left)1
+
+ Sorted Disc requests are:   10  27  41  64  110  120  129  147  186
+ index=3
+100=>110=>120=>129=>147=>186=>199=>64=>41=>27=>10=>End
+ Total Distance Traversed=288
+ Average Distance = 32.000000
+
+********MENU********
+ 1. Input data
+ 2. SSTF 
+ 3. SCAN 
+ 4. C-LOOK 
+ 5. Exit
+
+ Enter your choice 
+3
+Enter the maximum Value199
+
+ Enter the direction of head 
+ 1 - Towars higher disc(Right) 
+ 0 -towards lower disc(left)0
+
+ Sorted Disc requests are:   10  27  41  64  110  120  129  147  186
+ index=3
+100=>64=>41=>27=>10=>0=>110=>120=>129=>147=>186=>End
+ Total Distance Traversed=286
+ Average Distance = 31.777779
+
+********MENU********
+ 1. Input data
+ 2. SSTF 
+ 3. SCAN 
+ 4. C-LOOK 
+ 5. Exit
+
+ Enter your choice 
+4
+
+ 
+ Enter the direction of head 
+ 1 - Towars higher disc 
+ 0 -towards lower disc0
+
+ Sorted Disc requests are:   10  27  41  64  110  120  129  147  186
+ index=3
+100=>64=>41=>27=>10=>186=>147=>129=>120=>110=>End
+ Total Distance Traversed=342
+ Average Distance = 38.000000
+
+********MENU********
+ 1. Input data
+ 2. SSTF 
+ 3. SCAN 
+ 4. C-LOOK 
+ 5. Exit
+
+ Enter your choice 
+4
+
+ Enter the direction of head 
+ 1 - Towars higher disc 
+ 0 -towards lower disc1
+
+ Sorted Disc requests are:   10  27  41  64  110  120  129  147  186
+ index=3
+100=>110=>120=>129=>147=>186=>10=>27=>41=>End
+ Total Distance Traversed=293
+ Average Distance = 32.555557
+
+********MENU********
+ 1. Input data
+ 2. SSTF 
+ 3. SCAN 
+ 4. C-LOOK 
+ 5. Exit
+
+ Enter your choice 
+5
+student@student-HP-Pro-3330-MT:~/TEIT-57/Ass8$ 
+
+*/

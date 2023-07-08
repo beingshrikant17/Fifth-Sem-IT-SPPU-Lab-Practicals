@@ -1,0 +1,114 @@
+#include <pthread.h>
+#include <semaphore.h>
+#include <stdio.h>
+#include<stdlib.h>
+
+sem_t rw_mutex;
+pthread_mutex_t mutex;
+int cnt = 1;
+int numreader = 0;
+
+void *writer(void *wno)
+{   int now=(*((int *)wno));
+    printf("\nWriter %d is trying to enter",now);    
+    sem_wait(&rw_mutex);
+
+    printf("\nWriter is writing...");
+    sem_post(&rw_mutex);
+    printf("\nWriter %d is leaving...",now);    
+}
+
+void *reader(void *rno)
+{   
+    int nor=(*((int *)rno));
+    printf("\n%d Reader is trying to enter...", nor);
+    pthread_mutex_lock(&mutex);
+    numreader ++;
+    if(numreader == 1) 
+	  {
+        sem_wait(&rw_mutex); 
+    }
+    pthread_mutex_unlock(&mutex);
+    printf("\nReader is reading...");
+    pthread_mutex_lock(&mutex);
+    numreader --;
+    if(numreader == 0) 
+	  {
+        sem_post(&rw_mutex); // If this is the last reader, it will wake up the writer.
+    }
+    pthread_mutex_unlock(&mutex);
+    printf("\nReader %d is leaving...", nor);
+}
+
+int main()
+{   
+    int n1,n2;    
+    pthread_t read[10],write[10];
+    printf("\nEnter the no of readers: ");
+    scanf("%d",&n1);
+    printf("\nEnter the no of writers: ");
+    scanf("%d",&n2);
+    pthread_mutex_init(&mutex, NULL);
+    sem_init(&rw_mutex,0,1);
+    int i;
+    int pc[10] = {1,2,3,4,5,6,7,8,9,10}; 
+    for(i = 0; i < n1; i++)
+	    {
+        pthread_create(&read[i], NULL, (void *)reader, (void *)&pc[i]);
+      }
+    for(i = 0; i < n2; i++) 
+	    {
+        pthread_create(&write[i], NULL, (void *)writer, (void *)&pc[i]);
+      }
+
+    for(i = 0; i < n1; i++) 
+	    {
+        pthread_join(read[i], NULL);
+    	}
+    for(i = 0; i < n2; i++) 
+	    {
+        pthread_join(write[i], NULL);
+      }
+
+    pthread_mutex_destroy(&mutex);
+    sem_destroy(&rw_mutex);
+    return 0;
+}
+
+
+/*
+       Output : 
+
+student@student-HP-Pro-3330-MT:~/TEIT-57/Ass4$ gcc RW.c -o RW -pthread
+student@student-HP-Pro-3330-MT:~/TEIT-57/Ass4$ ./RW
+
+Enter the no of readers: 4
+
+Enter the no of writers: 4
+
+1 Reader is trying to enter...
+Reader is reading...
+Reader 1 is leaving...
+2 Reader is trying to enter...
+Reader is reading...
+Reader 2 is leaving...
+3 Reader is trying to enter...
+Reader is reading...
+Reader 3 is leaving...
+Writer 1 is trying to enter
+4 Reader is trying to enter...
+Writer is writing...
+Writer 1 is leaving...
+Writer 2 is trying to enter
+Reader is reading...
+Writer 3 is trying to enter
+Writer is writing...
+Writer 3 is leaving...
+Writer is writing...
+Writer 2 is leaving...
+Reader 4 is leaving...
+Writer 4 is trying to enter
+Writer is writing...
+Writer 4 is leaving...student@student-HP-Pro-3330-MT:~/TEIT-57/Ass4$ 
+
+*/

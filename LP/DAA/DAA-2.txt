@@ -1,0 +1,167 @@
+---------------------------------------------------
+NAME: Pawar Shrikant Sanjeev
+TEIT
+Roll no. : 57
+DAA - Assignment no. 2
+---------------------------------------------------
+
+---------------------------------
+Code:
+----------------------------------
+package daa_Assignments;
+import java.util.*;
+ 
+class Graph 
+{
+    class Edge 
+    {
+        int src, dest, weight;
+        Edge()
+        {
+        	src = dest = weight = 0; 
+        }
+    };
+ 
+    int V, E;
+    Edge edge[];
+ 
+    Graph(int v, int e)
+    {
+        V = v;
+        E = e;
+        edge = new Edge[e];
+        for (int i = 0; i < e; ++i)
+            edge[i] = new Edge();
+    }
+ 
+    void BellmanFord(Graph graph, int src)
+    {
+        int V = graph.V, E = graph.E;
+        int dist[] = new int[V];
+ 
+        for (int i = 0; i < V; ++i)
+            dist[i] = Integer.MAX_VALUE;
+        dist[src] = 0;
+ 
+        for (int i = 1; i < V; ++i) 
+        {
+            for (int j = 0; j < E; ++j) 
+            {
+                int u = graph.edge[j].src;
+                int v = graph.edge[j].dest;
+                int weight = graph.edge[j].weight;
+                if (dist[u] != Integer.MAX_VALUE && dist[u] + weight < dist[v])
+                    dist[v] = dist[u] + weight;
+            }
+        }
+ 
+        for (int j = 0; j < E; ++j) 
+        {
+            int u = graph.edge[j].src;
+            int v = graph.edge[j].dest;
+            int weight = graph.edge[j].weight;
+            if (dist[u] != Integer.MAX_VALUE && dist[u] + weight < dist[v]) 
+            {
+                System.out.println("Graph contains negative weight cycle");
+                return;
+            }
+        }
+        printArr(dist, V);
+    }
+    
+    void printArr(int dist[], int V)
+    {
+        System.out.println("Vertex Distance from Source");
+        for (int i = 0; i < V; ++i)
+            System.out.println(i + "\t\t" + dist[i]);
+    }
+}
+
+public class Assignment2
+{
+    public static void main(String[] args)
+    {
+        Scanner Sc=new Scanner(System.in);
+        System.out.print("Enter No of Vertices\t\t:");
+        int V=Sc.nextInt();
+        System.out.print("Enter No of Edges\t\t:");
+        int E=Sc.nextInt();
+        System.out.print("Enter Source Vertex\t\t:");
+        int SRC=Sc.nextInt();
+        Graph graph = new Graph(V, E);
+        
+        System.out.println("\n\n");
+        for(int i=0;i<E;i++)
+        {
+        	 System.out.println(i+1+" )");
+        	 System.out.print("\tEnter Source Vertex\t\t:");
+        	 graph.edge[i].src    = Sc.nextInt();
+        	 System.out.print("\tEnter Destination Vertex\t:");
+             graph.edge[i].dest   = Sc.nextInt();
+             System.out.print("\tEnter Weight\t\t\t:");
+             graph.edge[i].weight = Sc.nextInt();
+             System.out.println();
+        }
+        graph.BellmanFord(graph, SRC);
+        Sc.close();
+    }
+}
+
+-----------------------------------------------
+ Output :
+-----------------------------------------------
+
+Enter No of Vertices		:5
+Enter No of Edges		:8
+Enter Source Vertex		:0
+
+
+
+1 )
+	Enter Source Vertex		:0
+	Enter Destination Vertex	:1
+	Enter Weight			:-1
+
+2 )
+	Enter Source Vertex		:0
+	Enter Destination Vertex	:2
+	Enter Weight			:4
+
+3 )
+	Enter Source Vertex		:1
+	Enter Destination Vertex	:2
+	Enter Weight			:3
+
+4 )
+	Enter Source Vertex		:1
+	Enter Destination Vertex	:3
+	Enter Weight			:2
+
+5 )
+	Enter Source Vertex		:1
+	Enter Destination Vertex	:4
+	Enter Weight			:2
+
+6 )
+	Enter Source Vertex		:3
+	Enter Destination Vertex	:2
+	Enter Weight			:5
+
+7 )
+	Enter Source Vertex		:3
+	Enter Destination Vertex	:1
+	Enter Weight			:1
+
+8 )
+	Enter Source Vertex		:4
+	Enter Destination Vertex	:3
+	Enter Weight			:-3
+
+Vertex Distance from Source
+0		0
+1		-1
+2		2
+3		-2
+4		1
+
+--------------------------------------------------------

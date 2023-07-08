@@ -1,0 +1,110 @@
+-----------------------------
+Name- Pawar Shrikant Sanjeev
+Roll. No. - 57 
+subject : OS Lab
+Assignment No. - 7-B
+
+------------------------------
+Code-Server
+------------------------------
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAXSIZE 27
+
+int main()
+{
+    char c;
+    int shmid;
+    key_t key;
+    char *shm, *s;
+
+    key = 1234;
+// get identifier for shared memory 
+    if ((shmid = shmget(key, MAXSIZE, IPC_CREAT | 0666)) < 0)
+	{
+        perror("shmget");
+	exit(1);
+	}
+// attach shared memory 
+    if ((shm = shmat(shmid, NULL, 0)) == (char *) -1)
+	{
+	perror("shmat");
+	exit(1);
+	}
+
+    /*
+     *      * Put some things into the memory for the
+     *        other process to read.
+     *        */
+    s = shm;
+    printf("\n Enter data to put in shared memory:");
+    while((c=getchar())!='#')
+    *s++ = c;
+// detach shared memory 
+    shmdt(s);
+    exit(0);
+}
+-------------------------------
+CODE- Client
+--------------------------------
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <stdio.h>
+#include <stdlib.h>
+#define MAXSIZE 27
+
+
+int main()
+{
+    int shmid;
+    key_t key;
+    char *shm, *s;
+
+    key = 1234; 
+    if ((shmid = shmget(key, MAXSIZE, 0666)) < 0)
+       {
+        perror("shmget");
+	exit(1);
+	}
+// attach shared memory 
+    if ((shm = shmat(shmid, NULL, 0)) == (char *) -1)
+        {
+        perror("shmat");
+	exit(1);
+	}
+
+    //Now read what the server put in the memory.
+    for (s = shm; *s != '\0'; s++)
+        putchar(*s);
+    putchar('\n');
+
+    shmdt(s);  //detach shared memory 
+    shmctl(shmid,IPC_RMID,NULL); //destroy shared memory 
+    exit(0);
+}
+--------------------------------
+Output
+--------------------------------
+Server-
+Shrikant19@Shrikant19-virtual-machine:~/Documents/os$ gcc shmserver.c
+Shrikant19@Shrikant19-virtual-machine:~/Documents/os$ ./a.out
+
+ Enter data to put in shared memory:Vinit
+Good 
+Boy
+Op
+#
+--------------------------------------------
+Client-
+Shrikant19@Shrikant19-virtual-machine:~/Documents/os$ gcc shmclient.c
+Shrikant19@Shrikant19-virtual-machine:~/Documents/os$ ./a.out
+Vinit
+Good
+Boy
+Op
+---------------------------------------------

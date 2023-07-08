@@ -1,0 +1,237 @@
+Name : Pawar Shrikant Sanjeev
+Roll No: 57
+Subject : OS Lab
+Assignment :2 -B
+
+
+-------------------------
+Orphan Process Code:
+-------------------------
+
+#include <stdio.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <stdlib.h>
+
+void bubbleSort(int arr[],int n)
+{
+	int temp,i,j;
+	for(i=0;i<n;i++)
+	{
+		for(j=i+1;j<n;j++)
+		{
+			if(arr[i]>=arr[j])
+			{
+       			temp=arr[i];
+				arr[i]=arr[j];
+				arr[j]=temp;
+			}
+		}
+	}
+
+	printf("Sorted Array : \n");
+	for(i=0;i<n;i++)
+	{
+		printf("%d \t",arr[i]);
+	
+	}
+}
+ 
+
+void main(void)
+{
+	pid_t cpid, pid;
+	int status;
+	int n=0,i=0;
+	printf("Enter The Size of array : \n");
+	scanf("%d",&n);
+	int arr[10];
+	for(i=0;i<n;i++)
+	{	
+		printf("Enter The No : %d \n",i+1);
+		scanf("%d",&arr[i]);
+	}
+
+
+	printf("\nThis is Original Process");
+	cpid=fork();
+
+	if(cpid==0)
+	{
+		printf("\nThis is Child Process");
+		printf("\nChild : My Process ID is : %d",getpid());
+		printf("\nChild : My Parent Process ID is %d",getppid());
+		bubbleSort(arr,n);
+		//sleep(2);
+		printf("\n***Child exiting .....\n");
+		
+	}
+
+	else 
+	{
+		printf("\nParent : My Process ID is : %d",getpid());
+		printf("\nParent : My Parent Process ID is %d",getppid());
+		bubbleSort(arr,n);
+		//wait(&status);
+		printf("\n***Parent Detects Process %d is Finished with status %d*** \n", pid,status);
+		printf("***Parent exits \n");
+		printf("***This is Orphan State \n");
+
+	}
+}
+
+
+
+
+
+
+-------------------------
+Output
+-------------------------
+student@student-HP-Pro-3330-MT:~/TEIT-57/Ass2$ gcc Orphan.c -o orphan
+student@student-HP-Pro-3330-MT:~/TEIT-57/Ass2$ ./orphan
+Enter The Size of array : 
+5
+Enter The No : 1 
+99
+Enter The No : 2 
+98
+Enter The No : 3 
+97
+Enter The No : 4 
+96
+Enter The No : 5 
+95
+
+This is Original Process
+Parent : My Process ID is : 3658
+Parent : My Parent Process ID is 2570Sorted Array : 
+95 	96 	97 	98 	99 	
+This is Original Process
+***Parent Detects Process 4196877 is Finished with status 0*** 
+***Parent exits 
+***This is Orphan State 
+This is Child Process
+Child : My Process ID is : 3659
+Child : My Parent Process ID is 3658Sorted Array : 
+95 	96 	97 	98 	99 	
+***Child exiting .....
+student@student-HP-Pro-3330-MT:~/TEIT-57/Ass2$ 
+--------------------------
+Zombie Process Code:
+-------------------------
+
+#include <stdio.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <stdlib.h>
+
+void bubbleSort(int arr[],int n)
+{
+	int temp,i,j;
+	for(i=0;i<n;i++)
+	{
+		for(j=i+1;j<n;j++)
+		{
+			if(arr[i]>=arr[j])
+			{
+       			temp=arr[i];
+				arr[i]=arr[j];
+				arr[j]=temp;
+			}
+		}
+	}
+
+	printf("Sorted Array : \n");
+	for(i=0;i<n;i++)
+	{
+		printf("%d \t",arr[i]);
+	
+	}
+}
+ 
+
+void main(void)
+{
+	pid_t cpid, pid;
+	int status;
+	int n=0,i=0;
+	printf("Enter The Size of array : \n");
+	scanf("%d",&n);
+	int arr[10];
+	for(i=0;i<n;i++)
+	{	
+		printf("Enter The No : %d \n",i+1);
+		scanf("%d",&arr[i]);
+	}
+
+
+	printf("\nThis is Original Process");
+	cpid=fork();
+
+	if(cpid==0)
+	{
+		printf("\nThis is Child Process");
+		printf("\nChild : My Process ID is : %d",getpid());
+		printf("\nChild : My Parent Process ID is %d",getppid());
+		bubbleSort(arr,n);
+		//sleep(2);
+		printf("\n***Child exiting .....\n");
+		
+	}
+
+	else 
+	{
+		printf("\nParent : My Process ID is : %d",getpid());
+		printf("\nParent : My Parent Process ID is %d",getppid());
+		bubbleSort(arr,n);
+		wait(&status);
+		printf("\n***Parent Detects Process %d is Finished with status %d*** \n", pid,status);
+		printf("***Parent exits \n");
+		printf("***This is Zombie State \n");
+
+	}
+}
+
+
+
+
+
+
+-------------------
+Output:
+-------------------
+
+student@student-HP-Pro-3330-MT:~/TEIT-57/Ass2$ gcc Zombie.c -o Zombie
+student@student-HP-Pro-3330-MT:~/TEIT-57/Ass2$ ./Zombie
+Enter The Size of array : 
+5
+Enter The No : 1 
+99
+Enter The No : 2 
+98
+Enter The No : 3 
+97
+Enter The No : 4 
+96
+Enter The No : 5 
+95
+
+This is Original Process
+Parent : My Process ID is : 3668
+Parent : My Parent Process ID is 2570Sorted Array : 
+This is Original Process
+This is Child Process
+Child : My Process ID is : 3669
+Child : My Parent Process ID is 3668Sorted Array : 
+95 	96 	97 	98 	99 	
+***Child exiting .....
+95 	96 	97 	98 	99 	
+***Parent Detects Process 0 is Finished with status 0*** 
+***Parent exits 
+***This is Zombie State 
+student@student-HP-Pro-3330-MT:~/TEIT-57/Ass2$ 
+
+

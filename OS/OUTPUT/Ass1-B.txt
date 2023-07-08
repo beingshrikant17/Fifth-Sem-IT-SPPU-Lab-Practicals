@@ -1,0 +1,91 @@
+
+Name : Pawar Shrikant Sanjeev
+Subject : OS Lab
+Assignment :1-B (Commands)
+Roll No:57
+
+---------------------------------------------------------------------
+
+student@student-HP-Pro-3330-MT:~$ echo "Hello"
+Hello
+student@student-HP-Pro-3330-MT:~$ read Name
+Shrikant
+student@student-HP-Pro-3330-MT:~$ echo $Name
+Shrikant
+student@student-HP-Pro-3330-MT:~$ pwd
+/home/student
+student@student-HP-Pro-3330-MT:~$ ls
+25-TEIT                       cust.txt.ods      menu.sh       temp
+analyaze                      Desktop           Music         Templates
+analyzelogs                   Documents         os_ass2B.pdf  Untitled Document
+apache-hive-2.1.1-bin.tar.gz  Downloads         os_Ass3.pdf   Untitled Folder
+Ass1A.pdf                     DSBDAL-Videos     Pictures      Videos
+Ass2A_os.pdf                  examples.desktop  Public        vsasasign1.odt
+Ass2A.pdf                     fli.csv           R             vs assignm.odt
+cust.csv                      hduser            satwik
+cust.txt.csv                  hive              te it 06
+student@student-HP-Pro-3330-MT:~$ ls -l;
+total 154760
+drwxrwxr-x  2 student student      4096 Mar 29 14:32 25-TEIT
+drwxrwxrwx  3 hduser  root         4096 Mar 29 14:11 analyaze
+drwxrwxrwx  2 root    root         4096 May 13 15:23 analyzelogs
+-rw-r--r--  1 student student 149756462 Mar 20  2018 apache-hive-2.1.1-bin.tar.gz
+-rw-rw-r--  1 student student   1060820 Nov 23  2021 Ass1A.pdf
+-rw-rw-r--  1 student student   1969383 Nov 23  2021 Ass2A_os.pdf
+-rw-rw-r--  1 student student   2088668 Nov 23  2021 Ass2A.pdf
+-rw-rw-r--  1 student student        48 Apr 13 14:49 cust.csv
+-rw-rw-r--  1 student student        48 Apr 13 14:43 cust.txt.csv
+-rw-rw-r--  1 student student      8867 Apr 13 14:41 cust.txt.ods
+drwxr-xr-x 10 student student      4096 Jul 26 13:35 Desktop
+drwxr-xr-x  2 student student      4096 May 18 15:40 Documents
+drwxr-xr-x  2 student student      4096 May 18 15:38 Downloads
+drwxr-xr-x  2 student student      4096 May 18 16:12 DSBDAL-Videos
+-rw-r--r--  1 student student      8980 Jan 11  2020 examples.desktop
+-rw-rw-r--  1 student student        70 Apr 13 14:46 fli.csv
+drwxrwxr-x  2 student student      4096 Apr 20 13:54 hduser
+drwxr-xr-x  8 student student      4096 Mar 16 19:38 hive
+-rw-rw-r--  1 student student       214 Jul 25 14:51 menu.sh
+drwxr-xr-x  2 student student      4096 Jan 13  2020 Music
+-rw-rw-r--  1 student student   1120338 Nov 23  2021 os_ass2B.pdf
+-rw-rw-r--  1 student student   2303481 Nov 23  2021 os_Ass3.pdf
+drwxr-xr-x  2 student student      4096 Jan 13  2020 Pictures
+drwxr-xr-x  2 student student      4096 Jan 13  2020 Public
+drwxrwxr-x  3 student student      4096 Feb 11  2020 R
+drwxrwxr-x  2 student student      4096 Jul 25 14:53 satwik
+drwxrwxr-x  2 student student      4096 Jul 25 13:33 te it 06
+drwxrwxrwx  4 hduser  root         4096 Feb  3  2020 temp
+drwxr-xr-x  2 student student      4096 Jan 13  2020 Templates
+-rw-rw-r--  1 student student       558 Feb 15  2020 Untitled Document
+drwxrwxr-x  2 student student      4096 Mar 16 14:50 Untitled Folder
+drwxr-xr-x  2 student student      4096 Jan 13  2020 Videos
+-rw-rw-r--  1 student student     22250 May 13 14:21 vsasasign1.odt
+-rw-rw-r--  1 student student     17491 May 13 14:23 vs assignm.odt
+student@student-HP-Pro-3330-MT:~$ ls TEIT-57
+student@student-HP-Pro-3330-MT:~$ ls
+25-TEIT                       Ass1A.pdf     cust.txt.csv  Downloads         hduser   os_ass2B.pdf  R         temp               Videos
+analyaze                      Ass2A_os.pdf  cust.txt.ods  DSBDAL-Videos     hive     os_Ass3.pdf   satwik    Templates          vsasasign1.odt
+analyzelogs                   Ass2A.pdf     Desktop       examples.desktop  menu.sh  Pictures      te it 06  Untitled Document  vs assignm.odt
+apache-hive-2.1.1-bin.tar.gz  cust.csv      Documents     fli.csv           Music    Public        TEIT-57   Untitled Folder
+student@student-HP-Pro-3330-MT:~$ ^C
+student@student-HP-Pro-3330-MT:~$ cat Test
+cat: Test: No such file or directory
+student@student-HP-Pro-3330-MT:~$ cat Test
+Hello This Is First Assignment of OS Lab.
+student@student-HP-Pro-3330-MT:~$ touch n
+student@student-HP-Pro-3330-MT:~$ touch TEIT-57.txt
+student@student-HP-Pro-3330-MT:~$ rmdir
+rmdir: missing operand
+Try 'rmdir --help' for more information.
+student@student-HP-Pro-3330-MT:~$ rmdir TEIT-57.txt
+rmdir: failed to remove 'TEIT-57.txt': Not a directory
+student@student-HP-Pro-3330-MT:~$ rmdir TEIT-57
+rmdir: failed to remove 'TEIT-57': Directory not empty
+student@student-HP-Pro-3330-MT:~$ rmdir OSLAB
+student@student-HP-Pro-3330-MT:~$ mkdir py
+student@student-HP-Pro-3330-MT:~$ cd py
+student@student-HP-Pro-3330-MT:~/py$ cd ..
+student@student-HP-Pro-3330-MT:~$ rmdir py
+student@student-HP-Pro-3330-MT:~$ 
+
+---------------------------------------------------------------------
+

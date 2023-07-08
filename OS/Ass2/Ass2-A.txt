@@ -1,0 +1,174 @@
+Name : Pawar Shrikant Sanjeev
+Roll No: 57
+Subject : OS Lab
+Assignment :2 -A
+
+
+--------------------------
+Parent Process Code:
+-------------------------
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+
+int main(int argc,char *argv[])
+{
+
+	int ele,i,j,n,temp;
+	pid_t pid;
+	char *newenviron[] ={NULL};
+	printf("\nEnter the size for the array  : ");
+	scanf("%d",&n);
+	printf("	\n");
+	int Arr[n];
+	char* cval[n];
+	for(i=0;i<n;i++)
+	{
+		printf("Enter element No %d: ",i+1);
+		scanf("%d",&Arr[i]);
+	}
+
+	printf("\nEntered Elements are\n");
+
+	for(i=0;i<n;i++)
+	{
+		printf("\nElement No %d is %d: ",i+1,Arr[i]);
+		
+	}
+	printf("\n");
+	for(i=0;i<n;i++)
+	{
+		for(j=i+1;j<n;j++)
+		{
+			if(Arr[i]>=Arr[j])
+			{
+       			temp=Arr[i];
+				Arr[i]=Arr[j];
+				Arr[j]=temp;
+			}
+		}
+	}
+	printf("\nSorted Elements are\n");
+
+	for(i=0;i<n;i++)
+	{
+		printf("\nElement No %d is %d: ",i+1,Arr[i]);;
+		
+	}
+
+	for(i=0;i<n+1;i++)
+	{
+		char a[sizeof(int)];
+		snprintf(a,sizeof(int), "%d",Arr[i]);
+		cval[i] =malloc(sizeof(a));
+		strcpy(cval[i],a);
+	}
+
+	cval[i]=NULL;
+	printf("\n\nforking a child Process ...");
+	pid=fork();
+
+	if(pid==0)
+	{
+		printf("\nArgc count in Par : %d  \n", argc);
+		execve(argv[1],cval,newenviron);
+		perror("Error in execve call ...");
+	}
+}
+
+--------------------------
+Child Process Code:
+-------------------------
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+int main(int argc,char *argv[],char *en[])
+{
+	int i,j,c,ele,temp,cnt;
+	int Arr[argc];
+
+	for(j=0;j<argc-1;j++)
+	{
+		int n=atoi(argv[j]);
+		Arr[j]=n;
+	}
+
+	cnt=argc-1;
+	j=cnt-1;
+
+	for(i=0;i<(int)(cnt/2);i++)
+	{
+		temp=Arr[i];
+		Arr[i]=Arr[j];
+		Arr[j]=temp;	
+		j--;
+	}
+
+	printf("\nInside the child Process ...\n");
+	printf("\nElements Reversed in the given array are\n");
+	
+	for(i=0;i<cnt;i++)
+	{
+		printf("\nElement No %d is %d: ",i+1,Arr[i]);		
+	}
+
+	printf("\n");
+		
+	printf("\nArgc count in Chi : %d  \n", argc);
+}
+
+
+
+-------------------
+Output:
+-------------------
+
+
+student@student-HP-Pro-3330-MT:~/TEIT-57/Ass2$ gcc exep.c -o exep
+student@student-HP-Pro-3330-MT:~/TEIT-57/Ass2$ gcc exec.c -o exec
+student@student-HP-Pro-3330-MT:~/TEIT-57/Ass2$ ./exep ./exec
+
+Enter the size for the array  : 5
+	
+Enter element No 1: 99
+Enter element No 2: 98
+Enter element No 3: 97
+Enter element No 4: 96
+Enter element No 5: 95
+
+Entered Elements are
+
+Element No 1 is 99: 
+Element No 2 is 98: 
+Element No 3 is 97: 
+Element No 4 is 96: 
+Element No 5 is 95: 
+
+Sorted Elements are
+
+Element No 1 is 95: 
+Element No 2 is 96: 
+Element No 3 is 97: 
+Element No 4 is 98: 
+Element No 5 is 99: 
+
+forking a child Process ...forking a child Process ...
+Argc count in Par : 2  
+
+Inside the child Process ...
+
+Elements Reversed in the given array are
+
+Element No 1 is 99: 
+Element No 2 is 98: 
+Element No 3 is 97: 
+Element No 4 is 96: 
+Element No 5 is 95: 
+
+Argc count in Chi : 6  
+student@student-HP-Pro-3330-MT:~/TEIT-57/Ass2$ ^C
+student@student-HP-Pro-3330-MT:~/TEIT-57/Ass2$ 
+

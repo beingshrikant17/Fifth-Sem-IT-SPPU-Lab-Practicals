@@ -1,0 +1,267 @@
+Name : Pawar Shrikant Sanjeev
+Subject : OS Lab
+Assignment :1 -A
+Roll No:57
+
+
+---------------------------------------------
+Code :
+---------------------------------------------
+
+
+add(){
+	BOOK=$1
+
+        echo -n "Enter Name of person: " 
+        read name
+
+        echo -n "Enter Phone number: "
+        read phone
+
+	echo -n "Enter PAN Number: "
+        read PAN
+
+        echo "Should I enter the values:"
+        echo -e "$name ; $phone ; $PAN\n"
+
+        echo -n "y/n: "
+        read answer
+
+        if [ "$answer" == "y" ] 
+        then
+            echo "$name ; $phone ; $PAN " >>$BOOK
+        else
+            echo "$name ; $phone  $PAN NOT written to $BOOK"
+        fi
+	cat $BOOK
+}
+
+list(){
+	echo "---------------------------"
+        echo "Name  ;   Phone Number ;  PAN"
+	cat $BOOK
+	echo "---------------------------"
+}
+
+findr(){
+ 	echo -n "What person are you seeking: "
+        read find
+
+        grep -i $find $BOOK
+ 	#search record Phone in address book
+	if [ $? -ne 0 ]
+	then 
+		echo "No such record !"
+	else
+		echo "Record Found !!!"
+	fi
+}
+
+del()	
+{	echo -n "Which name should I delete: "
+        read nm
+	#search record name in address book
+	grep -i ^$nm $BOOK
+	if [ $? -ne 0 ]
+	then 
+		echo "No such record Found!"
+	else
+	#delete record from address book
+		sed -i "/$nm/d" $BOOK
+		echo "Record deleted successfully !!!"
+	fi
+}
+modify()
+{
+	echo -n "Which name should I modify: "
+	read nm
+        echo -n "Enter new name : "
+        read newnm
+	#search record name in address book
+	grep -i  ^$nm $BOOK
+	if [ $? -ne 0 ]
+	then 
+		echo "No such record Found!"
+	else
+	#delete record from address book
+		sed -i "s/$nm/$newnm/g" $BOOK
+		echo "Record modified successfully !!!"
+	fi
+}
+       
+
+ 	exit=0
+	echo -n "Enter Book name to Create or Open:"
+	read BOOK
+	touch $BOOK
+        while [ $exit -ne 1 ]
+        do
+            echo "Enter The Choice"
+            echo -e "1. add\n2. list\n3. find\n4. delete\n5. modify\n6. exit\n"
+            echo -n "Enter your choice:"
+            read answer
+
+            if [ $answer = 1 ]
+            then
+                add $BOOK
+            elif [ $answer = 2 ]
+            then
+                list $BOOK
+            elif [ "$answer" = "3" ]
+            then
+                findr $BOOK
+            elif [ "$answer" = "4" ]
+            then
+                del $BOOK
+            elif [ "$answer" = "5" ]
+            then
+                modify $BOOK
+
+            elif [ "$answer" = "6" ]
+            then
+                exit=1
+            else
+                echo "Invalid Command."
+            fi
+        done
+
+        exit 0
+
+--------------------------------------------
+Output :
+--------------------------------------------
+
+student@student-HP-Pro-3330-MT:~/TEIT-57/Ass1$ bash Assignment1.sh
+Enter Book name to Create or Open:Shrikant
+Enter The Choice
+1. add
+2. list
+3. find
+4. delete
+5. modify
+6. exit
+
+Enter your choice:1
+Enter Name of person: Shrikant
+Enter Phone number: 70308
+Enter PAN Number: 12345
+Should I enter the values:
+Shrikant ; 70308 ; 12345
+
+y/n: y
+Shrikant ; 70308 ; 12345 
+Enter The Choice
+1. add
+2. list
+3. find
+4. delete
+5. modify
+6. exit
+
+Enter your choice:2
+---------------------------
+Name  ;   Phone Number ;  PAN
+Shrikant ; 70308 ; 12345 
+---------------------------
+Enter The Choice
+1. add
+2. list
+3. find
+4. delete
+5. modify
+6. exit
+
+Enter your choice:3
+What person are you seeking: 70308
+Shrikant ; 70308 ; 12345 
+Record Found !!!
+Enter The Choice
+1. add
+2. list
+3. find
+4. delete
+5. modify
+6. exit
+
+Enter your choice:4
+Which name should I delete: Shrikant 
+Shrikant ; 70308 ; 12345 
+Record deleted successfully !!!
+Enter The Choice
+1. add
+2. list
+3. find
+4. delete
+5. modify
+6. exit
+
+Enter your choice:2
+---------------------------
+Name  ;   Phone Number ;  PAN
+---------------------------
+Enter The Choice
+1. add
+2. list
+3. find
+4. delete
+5. modify
+6. exit
+
+Enter your choice:1
+Enter Name of person: Vinay
+Enter Phone number: 12345
+Enter PAN Number: 94239
+Should I enter the values:
+Vinay ; 12345 ; 94239
+
+y/n: y
+Vinay ; 12345 ; 94239 
+Enter The Choice
+1. add
+2. list
+3. find
+4. delete
+5. modify
+6. exit
+
+Enter your choice:2
+---------------------------
+Name  ;   Phone Number ;  PAN
+Vinay ; 12345 ; 94239 
+---------------------------
+Enter The Choice
+1. add
+2. list
+3. find
+4. delete
+5. modify
+6. exit
+
+Enter your choice:5
+Which name should I modify: Vinay
+Enter new name : Vijay
+Vinay ; 12345 ; 94239 
+Record modified successfully !!!
+Enter The Choice
+1. add
+2. list
+3. find
+4. delete
+5. modify
+6. exit
+
+Enter your choice:2
+---------------------------
+Name  ;   Phone Number ;  PAN
+Vijay ; 12345 ; 94239 
+---------------------------
+Enter The Choice
+1. add
+2. list
+3. find
+4. delete
+5. modify
+6. exit
+
+Enter your choice:6
+student@student-HP-Pro-3330-MT:~/TEIT-57/Ass1$ 

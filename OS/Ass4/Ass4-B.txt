@@ -1,0 +1,155 @@
+/*
+       Name :   Pawar Shrikant Sanjeev
+       Subject: OS Lab
+       Roll No: 57
+       Assignment No :4-a
+*/
+
+#include<stdio.h> 
+#include<stdlib.h> 
+#include<unistd.h>
+#include<pthread.h> 
+#include<semaphore.h> 
+#define BUFFER_SIZE 5
+
+void init(); 
+void* consumer(void *arg); 
+void* producer(void *arg); 
+int item = 1; 
+
+typedef struct 
+{ 
+  int in; 
+  int out; 
+  int buff[BUFFER_SIZE];  
+  sem_t empty; 
+  sem_t full; 
+  pthread_mutex_t buff_lock;    
+}
+  buffer; 
+  buffer b; 
+  int cnt=0;
+
+int main(void) 
+{ 
+  int np, nc, i; 
+  pthread_t Pid[10], Cid[10]; 
+  init(); 
+  printf("\nEnter the number of Producers: "); 
+  scanf("%d", &np); 
+  printf("\nEnter the number of Consumers: "); 
+  scanf("%d", &nc);  
+ 
+  for(i=0; i<np; i++) 
+  {   
+    int *arg = malloc (sizeof(int*)); 
+    *arg = i; 
+    pthread_create(&Pid[i], NULL, producer, arg); 
+  } 
+
+  for(i=0; i<nc; i++) 
+  {   
+    int *arg = malloc (sizeof(int*)); 
+    *arg = i; 
+    pthread_create (&Cid[i], NULL, consumer, arg); 
+  }
+
+  for(i=0; i<np; i++) 
+  {   
+     pthread_join(Pid[i], NULL); 
+  }     
+  for(i=0; i<nc; i++) 
+  {   
+    pthread_join(Cid[i], NULL); 
+  } 
+
+  pthread_mutex_destroy(&b.buff_lock);
+  sem_destroy(&b.empty);  
+  sem_destroy(&b.full);  
+  return 0; 
+} 
+ 
+void init() 
+{ 
+  sem_init(&b.empty, 0, BUFFER_SIZE);    
+  sem_init(&b.full, 0, 0); 
+  pthread_mutex_init(&b.buff_lock, NULL); 
+  b.in = 0; 
+  b.out = 0; 
+} 
+ 
+void* producer(void *arg) 
+{ 
+  int i = *(int *)arg; 
+  while(1)
+  { 
+    sem_wait(&b.empty); 
+    pthread_mutex_lock(&b.buff_lock); 
+    printf("\nProducer %d has produced item number %d (|)", i+1, item);     
+    b.buff[(b.in++)%BUFFER_SIZE] = item++; 
+    pthread_mutex_unlock(&b.buff_lock); 
+    sem_post(&b.full); 
+    sleep(3); 
+  } 
+} 
+
+void* consumer(void *arg) 
+{ 
+  int i = *(int *)arg; 
+  while(1)
+  { 
+    sem_wait(&b.full); 
+    pthread_mutex_lock(&b.buff_lock); 
+    printf("\nConsumer %d has consumed item number %d (x)", i+1,b.buff[(b.out++)
+%BUFFER_SIZE]); 
+    pthread_mutex_unlock(&b.buff_lock); 
+    sem_post(&b.empty);
+    sleep(2);  
+  } 
+}
+
+/*
+       Output : 
+	
+student@student-HP-Pro-3330-MT:~/TEIT-57/Ass4$ gcc Ass4.c -o Ass4 -pthread
+student@student-HP-Pro-3330-MT:~/TEIT-57/Ass4$ ./Ass4
+
+Enter the number of Producers: 4
+
+Enter the number of Consumers: 4
+
+Producer 1 has produced item number 1 (|)
+Producer 2 has produced item number 2 (|)
+Producer 3 has produced item number 3 (|)
+Producer 4 has produced item number 4 (|)
+Consumer 1 has consumed item number 1 (x)
+Consumer 2 has consumed item number 2 (x)
+Consumer 3 has consumed item number 3 (x)
+Consumer 4 has consumed item number 4 (x)
+Producer 1 has produced item number 5 (|)
+Producer 3 has produced item number 6 (|)
+Consumer 1 has consumed item number 5 (x)
+Producer 4 has produced item number 7 (|)
+Consumer 4 has consumed item number 6 (x)
+Producer 2 has produced item number 8 (|)
+Consumer 2 has consumed item number 7 (x)
+Consumer 3 has consumed item number 8 (x)
+Producer 1 has produced item number 9 (|)
+Producer 4 has produced item number 10 (|)
+Producer 3 has produced item number 11 (|)
+Producer 2 has produced item number 12 (|)
+Consumer 4 has consumed item number 9 (x)
+Consumer 1 has consumed item number 10 (x)
+Consumer 2 has consumed item number 11 (x)
+Consumer 3 has consumed item number 12 (x)
+Producer 1 has produced item number 13 (|)
+Producer 2 has produced item number 14 (|)
+Producer 3 has produced item number 15 (|)
+Producer 4 has produced item number 16 (|)
+Consumer 4 has consumed item number 13 (x)
+Consumer 1 has consumed item number 14 (x)
+Consumer 2 has consumed item number 15 (x)
+^C
+student@student-HP-Pro-3330-MT:~/TEIT-57/Ass4$ 
+
+*/
